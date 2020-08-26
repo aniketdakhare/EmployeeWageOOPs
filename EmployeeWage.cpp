@@ -5,25 +5,26 @@
 
 using namespace std;
 
-struct CompanyDetails
+class CompanyEmpWage
 {
-    string companyName;
-    int NUM_OF_WORKING_DAYS;
-    int MAX_HRS_IN_MONTH;
-    int EMP_RATE_PER_HOUR;
-    int monthlyEmployeeWage;
+    public:
+        string companyName;
+        int NUM_OF_WORKING_DAYS;
+        int MAX_HRS_IN_MONTH;
+        int EMP_RATE_PER_HOUR;
+        int monthlyEmployeeWage;
 
-    CompanyDetails()
-    {
-        cout << "\nEnter Company Name. \n";
-        cin >> companyName;
-        cout << "\nEnter total number of working days per month. \n";
-        cin >> NUM_OF_WORKING_DAYS;
-        cout << "\nEnter maximum working hours per month. \n";
-        cin >> MAX_HRS_IN_MONTH;
-        cout << "\nEnter employee rate per hour. \n";
-        cin >> EMP_RATE_PER_HOUR;
-    }
+        CompanyEmpWage()
+        {
+            cout << "\nEnter Company Name. \n";
+            cin >> companyName;
+            cout << "\nEnter total number of working days per month. \n";
+            cin >> NUM_OF_WORKING_DAYS;
+            cout << "\nEnter maximum working hours per month. \n";
+            cin >> MAX_HRS_IN_MONTH;
+            cout << "\nEnter employee rate per hour. \n";
+            cin >> EMP_RATE_PER_HOUR;
+        }
 };
 
 class EmployeeWageComputation
@@ -34,13 +35,14 @@ class EmployeeWageComputation
     int EMP_RATE_PER_HOUR;
 
     public:
-        EmployeeWageComputation(CompanyDetails company)
+        EmployeeWageComputation(CompanyEmpWage company)
         {
             this->companyName = company.companyName;
             this->NUM_OF_WORKING_DAYS = company.NUM_OF_WORKING_DAYS;
             this->MAX_HRS_IN_MONTH = company.MAX_HRS_IN_MONTH;
             this->EMP_RATE_PER_HOUR = company.EMP_RATE_PER_HOUR;
         }
+
         int getMonthlyEmployeeWage();
 };
 
@@ -72,18 +74,26 @@ int EmployeeWageComputation :: getMonthlyEmployeeWage()
 
 struct EmployeeWageBuilder
 {
-    void computeCompanyEmployeeWage(vector<CompanyDetails>* companyDetails)
+    void computeCompanyEmployeeWage(vector<CompanyEmpWage>* companyDetails)
     {
-        struct CompanyDetails company;
-        EmployeeWageComputation* empWage = new EmployeeWageComputation(company);
-        company.monthlyEmployeeWage = empWage->getMonthlyEmployeeWage();
+        CompanyEmpWage company;
+        company.monthlyEmployeeWage = (new EmployeeWageComputation(company))->getMonthlyEmployeeWage();
         companyDetails->push_back(company);
     }
 };
 
+void display(vector<CompanyEmpWage> companyDetails)
+{
+    cout << "Company Name\t\tMonthly Employee Wage" << endl;
+    for (int i = 0; i < companyDetails.size(); i++)
+    {
+        cout << companyDetails[i].companyName << "\t\t:\t\t" << companyDetails[i].monthlyEmployeeWage << endl;
+    }
+}
+
 void selectChoice()
 {
-    vector<CompanyDetails> companyDetails;
+    vector<CompanyEmpWage> companyDetails;
     struct EmployeeWageBuilder employeeWageBuilder;
     bool flag = true;
     while (flag)
@@ -101,12 +111,7 @@ void selectChoice()
                 flag = false;
         }
     }
-
-    for (int i = 0; i < companyDetails.size(); i++)
-    {
-        cout << companyDetails[i].companyName << " : " << companyDetails[i].monthlyEmployeeWage << endl;
-    }
-    
+    display(companyDetails); 
 }
 
 int main()
