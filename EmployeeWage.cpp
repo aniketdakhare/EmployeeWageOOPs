@@ -4,21 +4,39 @@
 
 using namespace std;
 
+struct CompanyDetails
+{
+    string companyName;
+    int NUM_OF_WORKING_DAYS;
+    int MAX_HRS_IN_MONTH;
+    int EMP_RATE_PER_HOUR;
+
+    CompanyDetails()
+    {
+        cout << "\nEnter Company Name. \n";
+        cin >> companyName;
+        cout << "\nEnter total number of working days per month. \n";
+        cin >> NUM_OF_WORKING_DAYS;
+            cout << "\nEnter maximum working hours per month. \n";
+        cin >> MAX_HRS_IN_MONTH;
+            cout << "\nEnter employee rate per hour. \n";
+        cin >> EMP_RATE_PER_HOUR;
+    }
+};
+
 class EmployeeWageComputation
 {
-    const int EMP_RATE_PER_HOUR = 20;
-
     public:
-        int getWorkingHours();
+        int getWorkingHours(CompanyDetails);
         void getEmployeeWage();
 };
 
-int EmployeeWageComputation :: getWorkingHours()
+int EmployeeWageComputation :: getWorkingHours(CompanyDetails company)
 {
     const int PART_TIME = 1;
     const int FULL_TIME = 2;
-    const int NUM_OF_WORKING_DAYS = 20;    
-    const int MAX_HRS_IN_MONTH = 100;
+    const int NUM_OF_WORKING_DAYS = company.NUM_OF_WORKING_DAYS;    
+    const int MAX_HRS_IN_MONTH = company.MAX_HRS_IN_MONTH;
     int totalEmpHrs = 0;
     int totalWorkingDays = 0;
     srand(time(0));
@@ -43,12 +61,32 @@ int EmployeeWageComputation :: getWorkingHours()
 
 void EmployeeWageComputation :: getEmployeeWage()
 {
-    int empWage = getWorkingHours() * EMP_RATE_PER_HOUR;
-    cout << "Employee Wage Per Month = " << empWage << endl;    
+    struct CompanyDetails company;
+    int empWage = getWorkingHours(company) * company.EMP_RATE_PER_HOUR;
+    cout << "\nEmployee Wage Per Month = " << empWage << endl;
+}
+
+void selectChoice()
+{
+    EmployeeWageComputation* empWage = new EmployeeWageComputation;
+    while (true)
+    {
+        int select;
+        cout << "\n Select your choice. \n1: Calculate Employee wage for your company. \n2: Exit\n";
+        cin >> select;
+
+        switch(select)
+        {
+            case 1:
+                empWage->getEmployeeWage();  
+                break;
+            case 2:
+                exit(0);
+        }
+    } 
 }
 
 int main()
 {
-    EmployeeWageComputation* empWage = new EmployeeWageComputation;
-    empWage->getEmployeeWage();  
+    selectChoice();
 }
