@@ -18,24 +18,25 @@ int EmployeeWageComputation :: getWorkingHours()
     const int PART_TIME = 1;
     const int FULL_TIME = 2;
     const int NUM_OF_WORKING_DAYS = 20;    
-    int empHrs = 0;
+    const int MAX_HRS_IN_MONTH = 100;
     int totalEmpHrs = 0;
+    int totalWorkingDays = 0;
     srand(time(0));
-    for(int day = 0; day < NUM_OF_WORKING_DAYS; day++)
+    while(totalEmpHrs < MAX_HRS_IN_MONTH && totalWorkingDays < NUM_OF_WORKING_DAYS)
     {
+        totalWorkingDays++;
         int empCheck = rand() % 3;
         switch(empCheck)
         {
             case PART_TIME:
-                empHrs = 4;
+                totalEmpHrs += 4;
                 break;
             case FULL_TIME:
-                empHrs = 8;
+                totalEmpHrs += 8;
                 break;
             default:
-                empHrs = 0;
+                totalEmpHrs += 0;
         }
-        totalEmpHrs += empHrs;
     }
     return totalEmpHrs;
 }
