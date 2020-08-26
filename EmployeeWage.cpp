@@ -26,17 +26,27 @@ struct CompanyDetails
 
 class EmployeeWageComputation
 {
+    string companyName;
+    int NUM_OF_WORKING_DAYS;
+    int MAX_HRS_IN_MONTH;
+    int EMP_RATE_PER_HOUR;
+
     public:
-        int getWorkingHours(CompanyDetails);
-        void getEmployeeWage();
+        EmployeeWageComputation(CompanyDetails company)
+        {
+            this->companyName = company.companyName;
+            this->NUM_OF_WORKING_DAYS = company.NUM_OF_WORKING_DAYS;
+            this->MAX_HRS_IN_MONTH = company.MAX_HRS_IN_MONTH;
+            this->EMP_RATE_PER_HOUR = company.EMP_RATE_PER_HOUR;
+        }
+        int getWorkingHours();
+        int getEmployeeWage();
 };
 
-int EmployeeWageComputation :: getWorkingHours(CompanyDetails company)
+int EmployeeWageComputation :: getWorkingHours()
 {
     const int PART_TIME = 1;
     const int FULL_TIME = 2;
-    const int NUM_OF_WORKING_DAYS = company.NUM_OF_WORKING_DAYS;    
-    const int MAX_HRS_IN_MONTH = company.MAX_HRS_IN_MONTH;
     int totalEmpHrs = 0;
     int totalWorkingDays = 0;
     srand(time(0));
@@ -59,16 +69,15 @@ int EmployeeWageComputation :: getWorkingHours(CompanyDetails company)
     return totalEmpHrs;
 }
 
-void EmployeeWageComputation :: getEmployeeWage()
+int EmployeeWageComputation :: getEmployeeWage()
 {
-    struct CompanyDetails company;
-    int empWage = getWorkingHours(company) * company.EMP_RATE_PER_HOUR;
-    cout << "\nEmployee Wage Per Month = " << empWage << endl;
+    return getWorkingHours() * EMP_RATE_PER_HOUR;
 }
 
 void selectChoice()
 {
-    EmployeeWageComputation* empWage = new EmployeeWageComputation;
+        struct CompanyDetails company;
+    EmployeeWageComputation* empWage = new EmployeeWageComputation(company);
     while (true)
     {
         int select;
