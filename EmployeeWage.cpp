@@ -77,7 +77,30 @@ struct EmployeeWageBuilder
     {
         CompanyEmpWage company;
         company.dailyWages = (new EmployeeWageComputation())->getMonthlyEmployeeWage(company);
+        int monthlyWage = 0;
+
+        for (int day = 0; day < company.dailyWages.size(); day++)
+        {
+            monthlyWage += company.dailyWages[day];
+        }
+
+        company.monthlyEmployeeWage = monthlyWage;
         companyDetails->push_back(company);
+    }
+
+    void getMonthlyWageForCompany(list<CompanyEmpWage> companyDetails)
+    {
+        string companyName;
+        cout << "\nEnter Company Name. \n";
+        cin >> companyName;
+
+        for (list<CompanyEmpWage> :: iterator company = companyDetails.begin(); company != companyDetails.end(); company++)
+        {
+            if (company->companyName == companyName)
+            {
+                cout << "\nMonthly Employee wage of "<< company->companyName << " is Rs. " << company->monthlyEmployeeWage << endl;
+            }
+        }
     }
 };
 
@@ -97,10 +120,11 @@ void selectChoice()
     list<CompanyEmpWage> companyDetails;
     struct EmployeeWageBuilder employeeWageBuilder;
     bool flag = true;
+
     while (flag)
     {
         int select;
-        cout << "\n Select your choice. \n1: Calculate Employee wage for your company. \n2: Display Details. \n3: Exit\n";
+        cout << "\n Select your choice. \n1: Calculate Employee wage for your company. \n2: Display Details. \n3: Get total wage of company. \n4: Exit\n";
         cin >> select;
 
         switch(select)
@@ -112,6 +136,9 @@ void selectChoice()
                 display(companyDetails);
                 break;
             case 3:
+                employeeWageBuilder.getMonthlyWageForCompany(companyDetails);
+                break;
+            case 4:
                 flag = false;
         }
     } 
