@@ -27,57 +27,48 @@ class CompanyEmpWage
         }
 };
 
-class EmployeeWageComputation
+class IEmployeeWageComputation
 {
-    string companyName;
-    int NUM_OF_WORKING_DAYS;
-    int MAX_HRS_IN_MONTH;
-    int EMP_RATE_PER_HOUR;
-
     public:
-        EmployeeWageComputation(CompanyEmpWage company)
-        {
-            this->companyName = company.companyName;
-            this->NUM_OF_WORKING_DAYS = company.NUM_OF_WORKING_DAYS;
-            this->MAX_HRS_IN_MONTH = company.MAX_HRS_IN_MONTH;
-            this->EMP_RATE_PER_HOUR = company.EMP_RATE_PER_HOUR;
-        }
-
-        int getMonthlyEmployeeWage();
+        virtual int getMonthlyEmployeeWage(CompanyEmpWage companyDetails) = 0;
 };
 
-int EmployeeWageComputation :: getMonthlyEmployeeWage()
+class EmployeeWageComputation : public IEmployeeWageComputation
 {
-    const int PART_TIME = 1;
-    const int FULL_TIME = 2;
-    int totalEmpHrs = 0;
-    int totalWorkingDays = 0;
-    srand(time(0));
-    while(totalEmpHrs < MAX_HRS_IN_MONTH && totalWorkingDays < NUM_OF_WORKING_DAYS)
-    {
-        totalWorkingDays++;
-        int empCheck = rand() % 3;
-        switch(empCheck)
+    public:
+        int getMonthlyEmployeeWage(CompanyEmpWage companyDetails)
         {
-            case PART_TIME:
-                totalEmpHrs += 4;
-                break;
-            case FULL_TIME:
-                totalEmpHrs += 8;
-                break;
-            default:
-                totalEmpHrs += 0;
+            const int PART_TIME = 1;
+            const int FULL_TIME = 2;
+            int totalEmpHrs = 0;
+            int totalWorkingDays = 0;
+            srand(time(0));
+            while(totalEmpHrs < companyDetails.MAX_HRS_IN_MONTH && totalWorkingDays < companyDetails.NUM_OF_WORKING_DAYS)
+            {
+                totalWorkingDays++;
+                int empCheck = rand() % 3;
+                switch(empCheck)
+                {
+                    case PART_TIME:
+                        totalEmpHrs += 4;
+                        break;
+                    case FULL_TIME:
+                        totalEmpHrs += 8;
+                        break;
+                    default:
+                        totalEmpHrs += 0;
+                }
+            }
+            return totalEmpHrs * companyDetails.EMP_RATE_PER_HOUR;
         }
-    }
-    return totalEmpHrs * EMP_RATE_PER_HOUR;
-}
+};
 
 struct EmployeeWageBuilder
 {
     void computeCompanyEmployeeWage(vector<CompanyEmpWage>* companyDetails)
     {
         CompanyEmpWage company;
-        company.monthlyEmployeeWage = (new EmployeeWageComputation(company))->getMonthlyEmployeeWage();
+        company.monthlyEmployeeWage = (new EmployeeWageComputation())->getMonthlyEmployeeWage(company);
         companyDetails->push_back(company);
     }
 };
@@ -99,7 +90,7 @@ void selectChoice()
     while (flag)
     {
         int select;
-        cout << "\n Select your choice. \n1: Calculate Employee wage for your company. \n2: Exit\n";
+        cout << "\n Select your choice. \n1: Calculate Employee wage for your company. \n2: Display Details. \n3: Exit\n";
         cin >> select;
 
         switch(select)
@@ -108,10 +99,11 @@ void selectChoice()
                 employeeWageBuilder.computeCompanyEmployeeWage(&companyDetails);  
                 break;
             case 2:
+                display(companyDetails);
+            case 3:
                 flag = false;
         }
-    }
-    display(companyDetails); 
+    } 
 }
 
 int main()
