@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <vector>
+#include <list>
 
 using namespace std;
 
@@ -65,7 +65,7 @@ class EmployeeWageComputation : public IEmployeeWageComputation
 
 struct EmployeeWageBuilder
 {
-    void computeCompanyEmployeeWage(vector<CompanyEmpWage>* companyDetails)
+    void computeCompanyEmployeeWage(list<CompanyEmpWage>* companyDetails)
     {
         CompanyEmpWage company;
         company.monthlyEmployeeWage = (new EmployeeWageComputation())->getMonthlyEmployeeWage(company);
@@ -73,18 +73,17 @@ struct EmployeeWageBuilder
     }
 };
 
-void display(vector<CompanyEmpWage> companyDetails)
+void display(list<CompanyEmpWage> companyDetails)
 {
-    cout << "Company Name\t\tMonthly Employee Wage" << endl;
-    for (int i = 0; i < companyDetails.size(); i++)
+    for (list<CompanyEmpWage> :: iterator company = companyDetails.begin(); company != companyDetails.end(); company++)
     {
-        cout << companyDetails[i].companyName << "\t\t:\t\t" << companyDetails[i].monthlyEmployeeWage << endl;
+        cout << "\nMonthly Employee wage of "<< company->companyName << " is Rs. " << company->monthlyEmployeeWage << endl;
     }
 }
 
 void selectChoice()
 {
-    vector<CompanyEmpWage> companyDetails;
+    list<CompanyEmpWage> companyDetails;
     struct EmployeeWageBuilder employeeWageBuilder;
     bool flag = true;
     while (flag)
@@ -100,6 +99,7 @@ void selectChoice()
                 break;
             case 2:
                 display(companyDetails);
+                break;
             case 3:
                 flag = false;
         }
