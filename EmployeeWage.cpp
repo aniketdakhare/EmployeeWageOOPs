@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <list>
+#include <vector>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ class CompanyEmpWage
         int MAX_HRS_IN_MONTH;
         int EMP_RATE_PER_HOUR;
         int monthlyEmployeeWage;
+        vector<int> dailyWages;
 
         CompanyEmpWage()
         {
@@ -30,19 +32,22 @@ class CompanyEmpWage
 class IEmployeeWageComputation
 {
     public:
-        virtual int getMonthlyEmployeeWage(CompanyEmpWage companyDetails) = 0;
+        virtual vector<int> getMonthlyEmployeeWage(CompanyEmpWage companyDetails) = 0;
 };
 
 class EmployeeWageComputation : public IEmployeeWageComputation
 {
     public:
-        int getMonthlyEmployeeWage(CompanyEmpWage companyDetails)
+        vector<int> getMonthlyEmployeeWage(CompanyEmpWage companyDetails)
         {
             const int PART_TIME = 1;
             const int FULL_TIME = 2;
+            int empHrs = 0;
             int totalEmpHrs = 0;
             int totalWorkingDays = 0;
+            vector<int> dailyWages;
             srand(time(0));
+
             while(totalEmpHrs < companyDetails.MAX_HRS_IN_MONTH && totalWorkingDays < companyDetails.NUM_OF_WORKING_DAYS)
             {
                 totalWorkingDays++;
@@ -50,16 +55,19 @@ class EmployeeWageComputation : public IEmployeeWageComputation
                 switch(empCheck)
                 {
                     case PART_TIME:
-                        totalEmpHrs += 4;
+                        empHrs = 4;
                         break;
                     case FULL_TIME:
-                        totalEmpHrs += 8;
+                        empHrs= 8;
                         break;
                     default:
-                        totalEmpHrs += 0;
+                        empHrs = 0;
                 }
+                dailyWages.push_back(empHrs * companyDetails.EMP_RATE_PER_HOUR);
+                totalEmpHrs += empHrs;
             }
-            return totalEmpHrs * companyDetails.EMP_RATE_PER_HOUR;
+
+            return dailyWages;
         }
 };
 
@@ -68,7 +76,7 @@ struct EmployeeWageBuilder
     void computeCompanyEmployeeWage(list<CompanyEmpWage>* companyDetails)
     {
         CompanyEmpWage company;
-        company.monthlyEmployeeWage = (new EmployeeWageComputation())->getMonthlyEmployeeWage(company);
+        company.dailyWages = (new EmployeeWageComputation())->getMonthlyEmployeeWage(company);
         companyDetails->push_back(company);
     }
 };
@@ -77,7 +85,10 @@ void display(list<CompanyEmpWage> companyDetails)
 {
     for (list<CompanyEmpWage> :: iterator company = companyDetails.begin(); company != companyDetails.end(); company++)
     {
-        cout << "\nMonthly Employee wage of "<< company->companyName << " is Rs. " << company->monthlyEmployeeWage << endl;
+        for (int day = 0; day < company->dailyWages.size(); day++)
+        {
+            cout << "\nCompany Name: "<< company->companyName << "\t::\tDay_" << (day + 1) << " : Rs. " << company->dailyWages[day] << endl;
+        }
     }
 }
 
